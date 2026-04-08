@@ -1,3 +1,21 @@
+### Reflection
+
+**Core concept students needed to understand:** Using search to find relevant info first makes AI answers more accurate.
+
+Where students may struggle: Designing an effective retrieval pipeline and deciding how to split, score, and rank text chunks can be confusing.
+
+**Where AI was helpful vs misleading:** AI suggestions helped with coding ideas but sometimes gave confusing or wrong solutions so must be very wary of that!
+
+**One way you’d guide a student without giving the answer:** Have them follow a question through the system to see where bad or irrelevant results come from and have them get their answer from there!
+
+## Comparing Retrieval, Generation, and RAG
+
+Naive LLM = fluent but unreliable
+Retrieval Only = reliable but not user-friendly
+RAG = best balance of accuracy and usability
+
+RAG is only as good as its retrieval. If retrieval fails, generation has nothing reliable to use.
+
 # DocuBot
 
 DocuBot is a small documentation assistant that helps answer developer questions about a codebase.  
