@@ -115,28 +115,32 @@ class DocuBot:
         results = []
         # TODO: implement retrieval logic
         query_words = query.lower().split()
+        scored_chunks = []
 
-        # Find candidate documents using index
-        candidate_files = set()
-
-        for word in query_words:
-            word = word.strip(".,!?()[]{}:\"'")
-            if word in self.index:
-                candidate_files.update(self.index[word])
-
-        # Score each candidate
-        scored_results = []
-
+        # Split documents into smaller chunks (paragraphs)
         for filename, text in self.documents:
-            if filename in candidate_files:
-                score = self.score_document(query, text)
-                scored_results.append((filename, text, score))
+            paragraphs = text.split("\n\n")
 
-        # Sort by score (descending)
-        scored_results.sort(key=lambda x: x[2], reverse=True)
+            for para in paragraphs:
+                para = para.strip()
+                if not para:
+                    continue
 
-        # Return (filename, text)
-        return [(filename, text) for filename, text, _ in scored_results[:top_k]]
+                # Score each paragraph
+                score = self.score_document(query, para)
+
+                if score > 0:
+                    scored_chunks.append((filename, para, score))
+
+        # Sort by score (highest first)
+        scored_chunks.sort(key=lambda x: x[2], reverse=True)
+
+        # Guardrail — refuse if no strong evidence
+        if not scored_chunks or scored_chunks[0][2] < 2:
+            return []
+
+        # Return top_k results (filename, text)
+        return [(filename, text) for filename, text, _ in scored_chunks[:top_k]]
 
     # -----------------------------------------------------------
     # Answering Modes
